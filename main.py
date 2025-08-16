@@ -12,7 +12,7 @@ def property(id: int):
     return { f'This is a property page {id}' }
 
 @app.get('/profile/{username}')
-def profile(username: str):
+def profilePage(username: str):
     return { f'This is the profile page for username: {username}'}
 
 @app.get('/movies')
@@ -26,5 +26,14 @@ def admin():
 
 # Dynamic Route
 @app.get('/user/{username}')
-def profile(username):
+def userprofile(username):
     return { f'This is a profile page for {username}' }
+
+# Id and price are query parameters since they are not defined in the path
+@app.get('/products')
+def products(id: int = 1, price: int = None): # With default values
+    return { f'This is a product with id: {id} and price: {price}' }
+
+@app.get('/profile/{userid}/comments')
+def profile(userid: int, commentid: int):
+    return { f'This is a page for user with id: {userid} with comment id: {commentid}'}
