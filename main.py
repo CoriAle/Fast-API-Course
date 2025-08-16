@@ -1,4 +1,27 @@
 from fastapi import FastAPI
+from pydantic import BaseModel, Field, HttpUrl
+from typing import Set
+
+class Profile(BaseModel):
+    name: str
+    email: str
+    age: int
+
+class Image(BaseModel):
+    url: HttpUrl
+    title: str
+
+class Product(BaseModel):
+    name: str
+    price: int = Field(title="Price of the item", description="This is the price of the item beign added", gt=0)
+    discount: int
+    price_discounted: float
+    tags: Set[str]
+    image: Image
+
+class User(BaseModel):
+    name: str
+    email: str
 
 app = FastAPI()
 
@@ -37,3 +60,19 @@ def products(id: int = 1, price: int = None): # With default values
 @app.get('/profile/{userid}/comments')
 def profile(userid: int, commentid: int):
     return { f'This is a page for user with id: {userid} with comment id: {commentid}'}
+
+
+@app.post('/adduser')
+def addUser(profile: Profile):
+    return {'user data'}
+
+# Product is the request boyd, product id a path parameter and category a query param 
+@app.post('/addproduct/{product_id}')
+def addproduct(product: Product, product_id: int, category: str):
+    product.price_discounted = product.price - (product.price * product.discount)/100
+    return {'product_id': product_id, 'product': product, 'category': category}
+
+# Both product and user are part of the request body (extend baseModel)
+@app.post('/purchase')
+def purhase(product: Product, user: User):
+    return {'product': product, 'user': user}
