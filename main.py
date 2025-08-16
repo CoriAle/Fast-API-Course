@@ -18,3 +18,13 @@ def profile(username: str):
 @app.get('/movies')
 def movies():
     return { 'movies': ['Movie 1', 'Movie 2'] }
+
+# Static route
+@app.get('/user/admin')
+def admin():
+    return { f'This is the admin page' }
+
+# Dynamic Route
+@app.get('/user/{username}')
+def profile(username):
+    return { f'This is a profile page for {username}' }
