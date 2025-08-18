@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field, HttpUrl
 from typing import Set, List
 
 class Profile(BaseModel):
-    name: str
+    name: str = Field(example="John Doe")
     email: str
     age: int
 
