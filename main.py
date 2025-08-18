@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel, Field, HttpUrl
-from typing import Set
+from typing import Set, List
 
 class Profile(BaseModel):
     name: str
@@ -17,7 +17,37 @@ class Product(BaseModel):
     discount: int
     price_discounted: float
     tags: Set[str]
-    image: Image
+    image: List[Image]
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "name": "Phone",
+                "price": 100,
+                "discount": 5,
+                "price_discounted": 0,
+                "tags": [
+                    "Electronics", 
+                    "Computers"
+                ],
+                "image": [
+                    {
+                        "url": "https://example.com/",
+                        "title": "Product image 1"
+                    },
+                    {
+                        "url": "https://example.com/",
+                        "title": "Product image 1"
+                    }
+                ]
+            }
+        }
+
+class Offer(BaseModel):
+    name: str
+    description: str
+    price: float
+    products: List[Product]
 
 class User(BaseModel):
     name: str
@@ -76,3 +106,7 @@ def addproduct(product: Product, product_id: int, category: str):
 @app.post('/purchase')
 def purhase(product: Product, user: User):
     return {'product': product, 'user': user}
+
+@app.post('/addoffer')
+def addoffer(offer: Offer):
+    return offer 
